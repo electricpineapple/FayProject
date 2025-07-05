@@ -4,13 +4,31 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            Text("1")
+                .tabItem {
+                    Image("Calendar")
+                    Text("Appointments")
+                }
+
+            Text("2")
+                .tabItem {
+                    Image("Chats")
+                    Text("Chat")
+                }
+            
+            Text("3")
+                .tabItem {
+                    Image("Notebook")
+                    Text("Journal")
+                }
+
+            Text("4")
+                .tabItem {
+                    Image("User")
+                    Text("Profile")
+                }
         }
-        .padding()
     }
 }
 
