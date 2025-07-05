@@ -54,7 +54,20 @@ class AuthNetworking {
         urlRequest.setValue("Bearer \(token.access)", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
+    
+    func getAppointments() async throws -> [Appointment] {
+        let endpoint = "https://node-api-for-candidates.onrender.com/appointments"
         
+        guard let url = URL(string: endpoint) else {
+            throw FayError.invalidURL
+        }
+        
+        let urlRequest = URLRequest(url: url)
+        let appointments: [Appointment] = try await loadAuthorized(urlRequest)
+
+        return appointments
+    }
+
 //    func isAuthorized() async -> Bool {
 //        do {
 //            let _ = try await authManager.validRefreshToken()

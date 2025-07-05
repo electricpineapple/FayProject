@@ -4,6 +4,12 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedTab = 0
+    private var appointments: [Appointment] = []
+    @Bindable var contentViewModel: ContentViewModel
+    
+    init(contentViewModel: ContentViewModel) {
+        self.contentViewModel = contentViewModel
+    }
     
     var body: some View {
         TabView {
@@ -42,7 +48,9 @@ struct ContentView: View {
                 Group {
                     switch selectedTab {
                     case 0:
-                        Text("1")
+                        List($contentViewModel.appointments) { appointment in
+                            Text(appointment.id)
+                        }
                     default:
                         Text("Default")
                     }
@@ -72,9 +80,8 @@ struct ContentView: View {
                     Text("Profile")
                 }
         }
+        .task {
+            await contentViewModel.getAppointments()
+        }
     }
-}
-
-#Preview {
-    ContentView()
 }
