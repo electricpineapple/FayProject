@@ -13,14 +13,16 @@ struct FayApp: App {
     init() {
         tokenStorage = KeychainTokenStorage()
         unauthNetworking = UnauthNetworking(tokenStorage: tokenStorage)
-        authManager = AuthManager(unauthNetworking: unauthNetworking, tokenStorage: tokenStorage)
+        authManager = AuthManager(tokenStorage: tokenStorage)
         authNetworking = AuthNetworking(authManager: authManager)
-        contentViewModel = ContentViewModel(authNetworking: authNetworking)
+        contentViewModel = ContentViewModel(authNetworking: authNetworking, authentication: unauthNetworking)
+        
     }
 
     
     var body: some Scene {
         WindowGroup {
+//            LoginView(loginViewModel: LoginViewModel(authentication: contentViewModel))
             ContentView(contentViewModel: contentViewModel)
         }
     }

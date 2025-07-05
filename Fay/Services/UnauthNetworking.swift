@@ -59,7 +59,7 @@ class UnauthNetworking: Authentication {
         let accessDate = Date().addingTimeInterval(15 * 60)
         
         let datedToken = Token(
-            access: token.access,
+            token: token.token,
             accessExpires: accessDate,
         )
         

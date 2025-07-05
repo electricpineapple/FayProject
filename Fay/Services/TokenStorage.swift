@@ -3,7 +3,7 @@
 import Foundation
 
 struct Token: Codable {
-    let access: String
+    let token: String
     let accessExpires: Date?
     func accessExpired() -> Bool {
         guard let accessExpires = accessExpires, accessExpires > Date.now else {

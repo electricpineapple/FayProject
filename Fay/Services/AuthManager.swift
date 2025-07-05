@@ -8,11 +8,9 @@ import Foundation
 
 actor AuthManager {
     private var refreshTask: Task<Token, Error>?
-    private let unauthNetworking: UnauthNetworking
     private let tokenStorage: TokenStorage
     
-    init(unauthNetworking: UnauthNetworking, tokenStorage: TokenStorage) {
-        self.unauthNetworking = unauthNetworking
+    init(tokenStorage: TokenStorage) {
         self.tokenStorage = tokenStorage
     }
         

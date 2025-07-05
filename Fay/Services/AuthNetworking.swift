@@ -39,6 +39,21 @@ class AuthNetworking {
         let request = try await authorizedRequest(from: request)
         let (data, _) = try await URLSession.shared.data(for: request)
                         
+        
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    return try decoder.decode(T.self, from: data)
+                } catch let DecodingError.typeMismatch(type, context) {
+                    print("Type mismatch for type \(type): \(context.debugDescription)")
+                    print("Coding path: \(context.codingPath)")
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Missing key: \(key.stringValue) – \(context.debugDescription)")
+                    print("Coding path: \(context.codingPath)")
+                } catch let error {
+                    print("Decoding error: \(error)")
+                }
+
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let response = try decoder.decode(T.self, from: data)
@@ -51,7 +66,7 @@ class AuthNetworking {
         guard let token = try await authManager.validToken() else {
             throw FayError.invalidToken
         }
-        urlRequest.setValue("Bearer \(token.access)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("Bearer \(token.token)", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
     
@@ -63,9 +78,9 @@ class AuthNetworking {
         }
         
         let urlRequest = URLRequest(url: url)
-        let appointments: [Appointment] = try await loadAuthorized(urlRequest)
-
-        return appointments
+        let appointments: AppointmentResponse = try await loadAuthorized(urlRequest)
+        
+        return appointments.appointments
     }
 
 //    func isAuthorized() async -> Bool {
