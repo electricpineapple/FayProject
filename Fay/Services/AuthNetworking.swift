@@ -37,24 +37,8 @@ class AuthNetworking {
 
     func loadAuthorized<T: Decodable>(_ request: URLRequest, allowRetry: Bool = true) async throws -> T {
         let request = try await authorizedRequest(from: request)
-        let (data, urlResponse) = try await URLSession.shared.data(for: request)
-        
-//        guard let httpResponse = urlResponse as? HTTPURLResponse else {
-//            throw FayError.invalidResponse
-//        }
-//        
-//        switch httpResponse.statusCode {
-//        case 401:
-//            if allowRetry {
-//                _ = try await authManager.refreshToken()
-//                return try await loadAuthorized(request, allowRetry: false)
-//            }
-//            
-//            throw FayError.invalidToken
-//        default:
-//            break
-//        }
-                
+        let (data, _) = try await URLSession.shared.data(for: request)
+                        
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let response = try decoder.decode(T.self, from: data)

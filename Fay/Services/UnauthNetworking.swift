@@ -7,10 +7,6 @@ struct LoginRequestBody: Codable {
     let password: String
 }
 
-//struct RefreshRequestBody: Codable {
-//    let refresh: String
-//}
-
 struct AccessToken: Codable {
     let access: String
 }
@@ -18,7 +14,6 @@ struct AccessToken: Codable {
 protocol Authentication {
     func login(username: String, password: String) async throws
     func logout() async throws
-    
 }
 
 class UnauthNetworking: Authentication {
@@ -37,37 +32,6 @@ class UnauthNetworking: Authentication {
 
         return response
     }
-    
-//    func refreshToken(withRefreshToken token: Token) async throws -> Token {
-//        let endpoint = "https://node-api-for-candidates.onrender.com/token/refresh/"
-//
-//        guard let url = URL(string: endpoint) else {
-//            throw FayError.invalidURL
-//        }
-//                
-//        let body = RefreshRequestBody(refresh: token.refresh)
-//        
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "POST"
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.httpBody = try? JSONEncoder().encode(body)
-//
-//        let accessToken: AccessToken = try await loadUnauthorized(request)
-//        
-//        let fullToken = try await tokenStorage.getTokenFromStorage()
-//        let newAccessDate = Date().addingTimeInterval(5 * 60)
-//        
-//        let token = Token(
-//            access: accessToken.access,
-//            refresh: fullToken.refresh,
-//            accessExpires: newAccessDate,
-//            refreshExpires: fullToken.refreshExpires
-//        )
-//
-//        try await tokenStorage.saveTokenToStorage(token)
-//        
-//        return token
-//    }
     
     func login(username: String, password: String) async throws {
         let endpoint = "https://node-api-for-candidates.onrender.com/signin"
@@ -93,13 +57,10 @@ class UnauthNetworking: Authentication {
         //Could return the expiration time in the token payload as well to avoid manually entering time here
         //Could also just round trip the 401 but we can save the call if we know its expired locally
         let accessDate = Date().addingTimeInterval(15 * 60)
-//        let refreshDate = Date().addingTimeInterval(24 * 60 * 60)
         
         let datedToken = Token(
             access: token.access,
-//            refresh: token.refresh,
             accessExpires: accessDate,
-//            refreshExpires: refreshDate
         )
         
         try await tokenStorage.saveTokenToStorage(datedToken)

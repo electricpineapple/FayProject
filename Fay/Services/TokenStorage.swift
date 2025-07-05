@@ -4,21 +4,13 @@ import Foundation
 
 struct Token: Codable {
     let access: String
-//    let refresh: String
     let accessExpires: Date?
-//    let refreshExpires: Date?
     func accessExpired() -> Bool {
         guard let accessExpires = accessExpires, accessExpires > Date.now else {
             return true
         }
         return false
     }
-//    func refreshExpired() -> Bool {
-//        guard let refreshExpires = refreshExpires, refreshExpires > Date.now else {
-//            return true
-//        }
-//        return false
-//    }
 }
 
 protocol TokenStorage {
