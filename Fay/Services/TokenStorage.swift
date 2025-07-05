@@ -4,21 +4,21 @@ import Foundation
 
 struct Token: Codable {
     let access: String
-    let refresh: String
+//    let refresh: String
     let accessExpires: Date?
-    let refreshExpires: Date?
+//    let refreshExpires: Date?
     func accessExpired() -> Bool {
         guard let accessExpires = accessExpires, accessExpires > Date.now else {
             return true
         }
         return false
     }
-    func refreshExpired() -> Bool {
-        guard let refreshExpires = refreshExpires, refreshExpires > Date.now else {
-            return true
-        }
-        return false
-    }
+//    func refreshExpired() -> Bool {
+//        guard let refreshExpires = refreshExpires, refreshExpires > Date.now else {
+//            return true
+//        }
+//        return false
+//    }
 }
 
 protocol TokenStorage {
@@ -31,8 +31,8 @@ class KeychainTokenStorage: TokenStorage {
     func getTokenFromStorage() async throws -> Token {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "com.worshipworkbench.token-service",
-            kSecAttrAccount as String: "wwJsonWebToken",
+            kSecAttrService as String: "com.onrender.node-api-for-candidates",
+            kSecAttrAccount as String: "FayJsonWebToken",
             kSecReturnAttributes as String: true,
             kSecReturnData as String: true
         ]
@@ -59,8 +59,8 @@ class KeychainTokenStorage: TokenStorage {
         
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "com.worshipworkbench.token-service",
-            kSecAttrAccount as String: "wwJsonWebToken",
+            kSecAttrService as String: "com.onrender.node-api-for-candidates",
+            kSecAttrAccount as String: "FayJsonWebToken",
             kSecValueData as String: data,
             kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked
         ]
@@ -70,8 +70,8 @@ class KeychainTokenStorage: TokenStorage {
         if result == errSecDuplicateItem {
             let updateQuery: [String: Any] = [
                 kSecClass as String: kSecClassGenericPassword,
-                kSecAttrService as String: "com.worshipworkbench.token-service",
-                kSecAttrAccount as String: "wwJsonWebToken",
+                kSecAttrService as String: "com.onrender.node-api-for-candidates",
+                kSecAttrAccount as String: "FayJsonWebToken",
                 kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked
             ]
             let updateAttr = [
@@ -90,8 +90,8 @@ class KeychainTokenStorage: TokenStorage {
     func removeTokenFromStorage() async throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "com.worshipworkbench.token-service",
-            kSecAttrAccount as String: "wwJsonWebToken"
+            kSecAttrService as String: "com.onrender.node-api-for-candidates",
+            kSecAttrAccount as String: "FayJsonWebToken",
         ]
         
         let result = SecItemDelete(query as CFDictionary)
