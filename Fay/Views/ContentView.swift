@@ -50,8 +50,10 @@ struct ContentView: View {
                         switch selectedTab {
                         case 0:
                             List($contentViewModel.appointments) { appointment in
-                                Text(appointment.id)
+                                AppointmentRowView(appointment: appointment, isFirst: appointment.id == "mzdqmf1786") //I would not use id here but something like isToday
+                                    .listRowSeparator(.hidden)
                             }
+                            .listStyle(.plain)
                         default:
                             Text("Default")
                         }
@@ -88,6 +90,17 @@ struct ContentView: View {
         else {
             LoginView(loginViewModel: contentViewModel.loginViewModel)
         }
-            
+        
     }
+}
+
+#Preview {
+    let tokenStorage = KeychainTokenStorage()
+    let unauthNetworking = UnauthNetworking(tokenStorage: tokenStorage)
+    let authManager = AuthManager(tokenStorage: tokenStorage)
+    let authNetworking = AuthNetworking(authManager: authManager)
+    let contentViewModel = ContentViewModel(authNetworking: authNetworking, authentication: unauthNetworking)
+    
+    
+    ContentView(contentViewModel: contentViewModel)
 }

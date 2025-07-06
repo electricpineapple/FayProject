@@ -7,14 +7,46 @@ struct LoginView: View {
     
     var body: some View {
         Form {
-            TextField("Username", text: $loginViewModel.username)
-                .textInputAutocapitalization(.never)
-            SecureField("Password", text: $loginViewModel.password)
-            Button("Login") {
-                Task {
-                    await loginViewModel.login()
+            VStack {
+                Text("Log in")
+                    .font(.custom("Manrope-ExtraBold", size: 24))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 20)
+
+                Text("Username")
+                    .font(.custom("Manrope-Bold", size: 14))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                TextField("Username", text: $loginViewModel.username)
+                    .textInputAutocapitalization(.never)
+                    .textFieldStyle(.roundedBorder)
+
+                Text("Password")
+                    .font(.custom("Manrope-Bold", size: 14))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 20)
+
+                SecureField("Password", text: $loginViewModel.password)
+                    .textFieldStyle(.roundedBorder)
+                    
+
+                Spacer()
+                Button {
+                    Task {
+                        await loginViewModel.login()
+                    }
+                } label: {
+                    Text("Login")
+                        .frame(maxWidth: .infinity, minHeight: 30)
                 }
+                .buttonStyle(.borderedProminent)
             }
+            .padding(24)
         }
+        .formStyle(.columns)
     }
+}
+
+#Preview {
+    LoginView(loginViewModel: LoginViewModel(authentication: UnauthNetworking(tokenStorage: KeychainTokenStorage())))
 }
