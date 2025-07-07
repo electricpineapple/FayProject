@@ -3,9 +3,7 @@
 import SwiftUI
 
 struct AppointmentRowView: View {
-    
     @Binding var displayAppointment: DisplayAppointment
-    let calendar = Calendar.current
 
     var body: some View {
         ZStack {

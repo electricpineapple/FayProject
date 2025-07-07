@@ -35,7 +35,6 @@ struct LoginView: View {
                 SecureField("Password", text: $loginViewModel.password)
                     .textFieldStyle(.roundedBorder)
                     
-
                 Spacer()
                 Button {
                     Task {

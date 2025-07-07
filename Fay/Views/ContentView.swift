@@ -19,7 +19,7 @@ struct ContentView: View {
                         Text("Appointments")
                             .font(.custom("Manrope-ExtraBold", size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.all)
+                            .padding()
                         Button {
                             print("Button Tapped")
                         } label: {
@@ -42,26 +42,36 @@ struct ContentView: View {
                     }
                     .padding()
                     
-                    //If used more I would probably generalized even more, having the group possibly in the component,
-                    //able to pass in the content and tab labels and such
-                    TopTabComponent(selectedTab: $selectedTab)
-                    Spacer()
-                    Group {
-                        switch selectedTab {
-                        case 0:
-                            List($contentViewModel.displayAppointments) { appointment in
-                                AppointmentRowView(displayAppointment: appointment)
-                                    .listRowSeparator(.hidden)
+                    if let errorMessage = contentViewModel.errorMessage {
+                        Text(errorMessage)
+                            .font(.custom("Manrope-Bold", size: 14))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundColor(.red)
+                            .padding(.leading, 30)
+                    }
+                    else {
+                        
+                        //If used more I would probably generalized even more, having the group possibly in the component,
+                        //able to pass in the content and tab labels and such
+                        TopTabComponent(selectedTab: $selectedTab)
+                        Spacer()
+                        Group {
+                            switch selectedTab {
+                            case 0:
+                                List($contentViewModel.displayAppointments) { appointment in
+                                    AppointmentRowView(displayAppointment: appointment)
+                                        .listRowSeparator(.hidden)
+                                }
+                                .listStyle(.plain)
+                            case 1:
+                                List($contentViewModel.pastDisplayAppointments) { appointment in
+                                    AppointmentRowView(displayAppointment: appointment)
+                                        .listRowSeparator(.hidden)
+                                }
+                                .listStyle(.plain)
+                            default:
+                                Text("Default")
                             }
-                            .listStyle(.plain)
-                        case 1:
-                            List($contentViewModel.pastDisplayAppointments) { appointment in
-                                AppointmentRowView(displayAppointment: appointment)
-                                    .listRowSeparator(.hidden)
-                            }
-                            .listStyle(.plain)
-                        default:
-                            Text("Default")
                         }
                     }
                     Spacer()
@@ -96,7 +106,6 @@ struct ContentView: View {
         else {
             LoginView(loginViewModel: contentViewModel.loginViewModel)
         }
-        
     }
 }
 
@@ -106,7 +115,6 @@ struct ContentView: View {
     let authManager = AuthManager(tokenStorage: tokenStorage)
     let authNetworking = AuthNetworking(authManager: authManager)
     let contentViewModel = ContentViewModel(authNetworking: authNetworking, authentication: unauthNetworking)
-    
     
     ContentView(contentViewModel: contentViewModel)
 }

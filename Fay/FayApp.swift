@@ -19,10 +19,8 @@ struct FayApp: App {
         
     }
 
-    
     var body: some Scene {
         WindowGroup {
-//            LoginView(loginViewModel: LoginViewModel(authentication: contentViewModel))
             ContentView(contentViewModel: contentViewModel)
         }
     }
