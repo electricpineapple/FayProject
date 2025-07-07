@@ -38,9 +38,14 @@ struct DisplayAppointment: Identifiable {
     private let authNetworking: AuthNetworking
     private let authentication: Authentication
     private var _loginViewModel: LoginViewModel?
+    private var _profileViewModel: ProfileViewModel?
     private(set) var loginViewModel: LoginViewModel {
         get { return _loginViewModel! } //if we didn't set this up right, fail fast
         set { _loginViewModel = newValue }
+    }
+    private(set) var profileViewModel: ProfileViewModel {
+        get { return _profileViewModel! } //if we didn't set this up right, fail fast
+        set { _profileViewModel = newValue }
     }
 
     init(authNetworking: AuthNetworking, authentication: Authentication) {
@@ -48,6 +53,7 @@ struct DisplayAppointment: Identifiable {
         self.authentication = authentication
         
         loginViewModel = LoginViewModel(authentication: self) //the optional work above lets self be the delegate
+        profileViewModel = ProfileViewModel(authentication: self)
     }
     
     var appointments: [Appointment] = []

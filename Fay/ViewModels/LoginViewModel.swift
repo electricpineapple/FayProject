@@ -29,6 +29,8 @@ import Foundation
         
         do {
             try await authentication.login(username: username, password: password)
+            username = ""
+            password = ""
         }
         catch {
             errorMessage = "Invalid username or password."

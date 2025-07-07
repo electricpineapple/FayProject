@@ -99,20 +99,7 @@ struct ContentView: View {
                         Text("Journal")
                     }
                 
-                VStack {
-                    Button {
-                        Task {
-                            try await contentViewModel.logout()
-                        }
-                    } label: {
-                        HStack {
-                            Text("Log out")
-                        }
-                        .frame(maxWidth: .infinity, minHeight: 30)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .padding()
-                }
+                ProfileView(profileViewModel: contentViewModel.profileViewModel)
                 .tabItem {
                     Image("User")
                     Text("Profile")
