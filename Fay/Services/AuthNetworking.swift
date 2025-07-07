@@ -14,6 +14,7 @@ enum FayError: Error, LocalizedError {
     case missingData
     case tokenRefresh
     case invalidToken
+    case unauthenticated
     
     var errorDescription: String? {
             switch self {
@@ -34,26 +35,22 @@ class AuthNetworking {
     }
     
     //This loadAuthorized with 401 handling is only needed if we implement refresh tokens
-
     func loadAuthorized<T: Decodable>(_ request: URLRequest, allowRetry: Bool = true) async throws -> T {
         let request = try await authorizedRequest(from: request)
-        let (data, _) = try await URLSession.shared.data(for: request)
-                        
+        let (data, urlResponse) = try await URLSession.shared.data(for: request)
         
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    return try decoder.decode(T.self, from: data)
-                } catch let DecodingError.typeMismatch(type, context) {
-                    print("Type mismatch for type \(type): \(context.debugDescription)")
-                    print("Coding path: \(context.codingPath)")
-                } catch let DecodingError.keyNotFound(key, context) {
-                    print("Missing key: \(key.stringValue) – \(context.debugDescription)")
-                    print("Coding path: \(context.codingPath)")
-                } catch let error {
-                    print("Decoding error: \(error)")
-                }
-
+        guard let httpResponse = urlResponse as? HTTPURLResponse else {
+            throw FayError.invalidResponse
+        }
+        
+        switch httpResponse.statusCode {
+        case 401:
+            //Handle the case of token is stored but has expired
+            throw FayError.unauthenticated
+        default:
+            break
+        }
+        
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .iso8601
@@ -84,13 +81,13 @@ class AuthNetworking {
         return appointments.appointments
     }
 
-//    func isAuthorized() async -> Bool {
-//        do {
-//            let _ = try await authManager.validRefreshToken()
-//        }
-//        catch {
-//            return false
-//        }
-//        return true
-//    }
+    func isAuthorized() async -> Bool {
+        do {
+            let _ = try await authManager.validToken()
+        }
+        catch {
+            return false
+        }
+        return true
+    }
 }

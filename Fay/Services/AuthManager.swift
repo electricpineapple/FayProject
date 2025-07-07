@@ -21,11 +21,7 @@ actor AuthManager {
         
         let token = try await tokenStorage.getTokenFromStorage()
         
-        if !token.accessExpired() {
-            return token
-        }
-        
-        return nil
+        return token
     }
     
 }

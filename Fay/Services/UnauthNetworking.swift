@@ -54,16 +54,8 @@ class UnauthNetworking: Authentication {
         }
         
         let token = try JSONDecoder().decode(Token.self, from: data)
-        //Could return the expiration time in the token payload as well to avoid manually entering time here
-        //Could also just round trip the 401 but we can save the call if we know its expired locally
-        let accessDate = Date().addingTimeInterval(15 * 60)
         
-        let datedToken = Token(
-            token: token.token,
-            accessExpires: accessDate,
-        )
-        
-        try await tokenStorage.saveTokenToStorage(datedToken)
+        try await tokenStorage.saveTokenToStorage(token)
     }
     
     func logout() async throws {

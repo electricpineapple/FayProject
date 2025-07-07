@@ -68,6 +68,12 @@ struct DisplayAppointment: Identifiable {
             self.pastDisplayAppointments = self.pastAppointments.map { DisplayAppointment(appointment: $0) }
         }
         catch {
+            switch error {
+            case FayError.unauthenticated:
+                isAuthenticated = false
+            default:
+                break
+            }
             //Probably would customize this to be a nicer message
             errorMessage = error.localizedDescription
         }
@@ -81,5 +87,9 @@ struct DisplayAppointment: Identifiable {
     func logout() async throws {
         try await authentication.logout()
         self.isAuthenticated = false
+    }
+    
+    func checkIsAuthenticated() async {
+        isAuthenticated = await authNetworking.isAuthorized()
     }
 }

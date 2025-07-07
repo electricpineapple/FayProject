@@ -63,12 +63,18 @@ struct ContentView: View {
                                         .listRowSeparator(.hidden)
                                 }
                                 .listStyle(.plain)
+                                .refreshable {
+                                    await contentViewModel.getAppointments()
+                                }
                             case 1:
                                 List($contentViewModel.pastDisplayAppointments) { appointment in
                                     AppointmentRowView(displayAppointment: appointment)
                                         .listRowSeparator(.hidden)
                                 }
                                 .listStyle(.plain)
+                                .refreshable {
+                                    await contentViewModel.getAppointments()
+                                }
                             default:
                                 Text("Default")
                             }
@@ -93,11 +99,24 @@ struct ContentView: View {
                         Text("Journal")
                     }
                 
-                Text("4")
-                    .tabItem {
-                        Image("User")
-                        Text("Profile")
+                VStack {
+                    Button {
+                        Task {
+                            try await contentViewModel.logout()
+                        }
+                    } label: {
+                        HStack {
+                            Text("Log out")
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 30)
                     }
+                    .buttonStyle(.borderedProminent)
+                    .padding()
+                }
+                .tabItem {
+                    Image("User")
+                    Text("Profile")
+                }
             }
             .task {
                 await contentViewModel.getAppointments()
@@ -105,6 +124,9 @@ struct ContentView: View {
         }
         else {
             LoginView(loginViewModel: contentViewModel.loginViewModel)
+                .task {
+                    await contentViewModel.checkIsAuthenticated()
+                }
         }
     }
 }
