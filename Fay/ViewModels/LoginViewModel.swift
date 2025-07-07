@@ -22,6 +22,11 @@ import Foundation
             return
         }
         
+        if username != "john" && password != "12345" {
+            errorMessage = "Invalid username or password."
+            return
+        }
+        
         do {
             try await authentication.login(username: username, password: password)
         }

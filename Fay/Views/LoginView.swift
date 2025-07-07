@@ -12,7 +12,13 @@ struct LoginView: View {
                     .font(.custom("Manrope-ExtraBold", size: 24))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 20)
-
+                if let message = loginViewModel.errorMessage {
+                    Text(message)
+                        .font(.custom("Manrope-Bold", size: 14))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.red)
+                        .padding(.bottom, 10)
+                }
                 Text("Username")
                     .font(.custom("Manrope-Bold", size: 14))
                     .frame(maxWidth: .infinity, alignment: .leading)
