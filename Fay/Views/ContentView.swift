@@ -49,8 +49,14 @@ struct ContentView: View {
                     Group {
                         switch selectedTab {
                         case 0:
-                            List($contentViewModel.appointments) { appointment in
-                                AppointmentRowView(appointment: appointment, isFirst: appointment.id == "mzdqmf1786") //I would not use id here but something like isToday
+                            List($contentViewModel.displayAppointments) { appointment in
+                                AppointmentRowView(displayAppointment: appointment)
+                                    .listRowSeparator(.hidden)
+                            }
+                            .listStyle(.plain)
+                        case 1:
+                            List($contentViewModel.pastDisplayAppointments) { appointment in
+                                AppointmentRowView(displayAppointment: appointment)
                                     .listRowSeparator(.hidden)
                             }
                             .listStyle(.plain)

@@ -56,6 +56,7 @@ class AuthNetworking {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
         let response = try decoder.decode(T.self, from: data)
         
         return response

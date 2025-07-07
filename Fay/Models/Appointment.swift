@@ -1,5 +1,7 @@
 //
 
+import Foundation
+
 struct AppointmentResponse: Codable {
     let appointments: [Appointment]
 }
@@ -10,8 +12,8 @@ struct Appointment: Codable, Identifiable {
     let providerId: String
     let status: String
     let appointmentType: String
-    let start: String
-    let end: String
+    let start: Date
+    let end: Date
     let durationInMinutes: Int
     let recurrenceType: String
     

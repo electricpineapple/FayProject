@@ -4,12 +4,12 @@ import SwiftUI
 
 struct AppointmentRowView: View {
     
-    @Binding var appointment: Appointment
-    var isFirst: Bool = false
-    
+    @Binding var displayAppointment: DisplayAppointment
+    let calendar = Calendar.current
+
     var body: some View {
         ZStack {
-            if isFirst {
+            if displayAppointment.isFirst {
                 RoundedRectangle(cornerRadius: 16)
                     .foregroundStyle(.background)
                     .shadow(radius: 4, x: 4, y: 4)
@@ -33,25 +33,25 @@ struct AppointmentRowView: View {
                             .frame(width: 48, height: 28)
                             .padding(.top, 20)
                         VStack {
-                            Text("NOV")
+                            Text(displayAppointment.month)
                                 .font(.custom("Manrope-SemiBold", size: 12))
                                 .foregroundStyle(.accent)
-                            Text("12")
+                            Text(displayAppointment.day)
                                 .font(.custom("Manrope-SemiBold", size: 18))
                         }
                     }
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("11:00 AM - 12:00 PM (PT)")
+                        Text(displayAppointment.isFirst ? displayAppointment.time : displayAppointment.shortTime)
                             .font(.custom("Manrope-Bold", size: 14))
-                        Text("Follow up with Jane Williams, RD")
+                        Text(displayAppointment.isFirst ? displayAppointment.typeDisplay : displayAppointment.shortTypeDisplay)
                             .font(.custom("Manrope-Medium", size: 12))
                             .foregroundStyle(.fayDarkGray)
                     }
                 }
-                if (isFirst) {
+                if (displayAppointment.isFirst) {
                     Button {
                         Task {
-                            
+                            print("Button Tapped")
                         }
                     } label: {
                         HStack {
@@ -71,6 +71,6 @@ struct AppointmentRowView: View {
 }
 
 #Preview {
-    @Previewable @State var appointment: Appointment = .init(id: "1224", patientId: "34566", providerId: "999", status: "open", appointmentType: "type", start: "start", end: "end", durationInMinutes: 123, recurrenceType: "Monthly")
-    AppointmentRowView(appointment: $appointment, isFirst: false)
+    @Previewable @State var displayAppointment: DisplayAppointment = .init(appointment: Appointment(id: "1224", patientId: "34566", providerId: "999", status: "open", appointmentType: "type", start: Date(), end: Date(), durationInMinutes: 123, recurrenceType: "Monthly"))
+    AppointmentRowView(displayAppointment: $displayAppointment)
 }
